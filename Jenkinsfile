@@ -17,5 +17,17 @@ pipeline {
                 sh './jenkins/scripts/test.sh'
             }
         }
+        stage('Manual Approval') {
+            steps {
+                input message: 'Lanjutkan ke tahap Deploy?', parameters: [choice(choices: ['Proceed', 'Abort'], description: 'Pilih opsi:', name: 'ACTION')]
+            }
+        }
+        stage('Deploy') {
+            steps {
+                sh './jenkins/scripts/deliver.sh'
+                sleep time: 60, unit: 'SECONDS'
+                sh './jenkins/scripts/kill.sh'
+            }
+        }
     }
 }
